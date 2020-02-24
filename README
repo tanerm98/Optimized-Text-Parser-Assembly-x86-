@@ -1,0 +1,490 @@
+
+**********---------- Taner MUSTAFA - 325 CB - Tema 3 IOCLA ----------**********
+
+//------- Analiza a functiilor <mystery> si a celorlalte functii si descriere a 
+functionarii programului. ---------------------------------------------------//
+	Pentru ca am rescris programul de la 0 si nu am mai folosit functiile 
+<MYSTERY>, am adaugat aici si analiza rezumata pentru fiecare functie, care 
+trebuia sa fie in cod inaintea fiecarei functii.
+
+
+|----------------------------- FUNCTIILE < MYSTERY > -------------------------|
+
+
+//**********-------------------------------------------------------**********//
+; mystery1
+; Description: calculates the length of a string.
+; @string: the address of the beginning of the string.
+; Return value: the length of the string.
+; Suggested name: getLength.
+
+	mystery1() - calculeaza lungimea sirului de input.
+@string: adresa de inceput a sirului.
+
+Se parcurge sirul element cu element si se incrementeaza registrul care 
+memoreaza lungimea. Sirul trebuie sa fie in format ASCII, pentru ca singura 
+conditie de terminare a buclei este gasirea unui byte "0x00".
+Observatie: registrul <ebx> nu se modifica dupa ce este apelata aceasta 
+functie.
+
+Return: lungimea sirului.
+
+prototip: int getLength(char *string);
+
+
+
+//**********-------------------------------------------------------**********//
+; mystery2
+; Description: calculates the number of characters from the beginning of a 
+	       string, to a certain given character.
+; @string: the address of the beginning of the string.
+; @char: the character to be searched in the string.
+; Return value: the length of the string or an error code if the length
+; of the string is 0.
+; Suggested name: getLengthBefore.
+
+	mystery2() - calculeaza numarul de caractere dintre inceputul unui 
+sir si un caracter dat ca input.
+@string: adresa de inceput a sirului.
+@char: caracterul limita.
+
+Se apeleaza <mystery1(string)> pentru a se afla lungimea sirului.
+Se parcurge sirul element cu element si se incrementeaza registrul care 
+memoreaza lungimea. Conditia de oprire a buclei este intalnirea caracterului 
+dat ca input. 
+<BUG>: Se observa ca, daca acest caracter nu se intalneste niciodata, 
+functia intra intr-o bucla infinita si se trece peste sfarsitul sirului.
+De asemenea, dupa terminarea buclei, se verifica daca sirul era nul si, daca 
+da, se returneaza un cod de eroare: aceasta verificare ar fi trebuit facuta de 
+la inceput, pentru a nu se mai parcurge bucla inutil.
+
+Return: lungimea dintre inceputul sirului si caracterul specificat, sau 
+cod de eroare (0xFFFFFFFF) daca sirul este de lungime 0.
+
+prototip: int getLengthBefore(char *string, char limit);
+
+
+
+//**********-------------------------------------------------------**********//
+; mystery3
+; Description: checks if 2 strings are different until a certain length.
+; @string1: the address of the begining of the first string.
+; @string2: the address of the begining of the second string.
+; @length: the length to which the 2 strings are compared.
+; Return value: 1 if the 2 strings are different on the requested length, 
+; 		0 otherwise.
+; Suggested name: areDifferent.
+
+	mystery3() - verifica daca 2 siruri sunt identice pana la o anumita
+lungime.
+@string1: adresa de inceput a primului sir.
+@string2: adresa de inceput a celui de-al doilea sir.
+@length: numarul de caractere care se vor compara din cele 2 siruri.
+
+Se parcurg ambele siruri element cu element. Bucla se intrerupe daca se gasesc 
+2 elemente diferite sau daca se parcurg toate cele <@length> caractere.
+<BUG>: Daca <@length> este mai mare decat lungimea unui sir si nu se iese din 
+bucla pana la sfarsitul acestuia, atunci se va trece peste sfarsitul sirului 
+mai scurt decat lungimea data.
+
+Return: 1 daca cele 2 siruri sunt diferite pe lungimea ceruta, 0 in caz contrar. 
+
+prototip: int areDifferent(char *string1, char *string2, int length);
+
+
+
+//**********-------------------------------------------------------**********//
+; mystery4
+; Description: copies a number of given characters from one string to another.
+; @string1: the address of the begining of the first string.
+; @string2: the address of the begining of the second string, which is copied.
+; @length: the number of characters to copy from the second string to the first 
+;	   one, starting from the beginning.
+; Return value: no returned value. The first string gets modified.
+; Suggested name: copy.
+
+	mystery4() - copiaza un numar cerut de elemente din al doilea sir, in 
+primul, pornind de la inceputul acestora.
+@string1: adresa de inceput a primului sir, in care se copiaza.
+@string2: adresa de inceput a celui de-al doilea sir, din care se copiaza.
+@length: numarul de caractere care se vor copia.
+
+Se parcurg ambele siruri element cu element si se copiaza caracterul curent din 
+al 2lea sir, in primul, suprascriind ce era in primul. Bucla se intrerupe dupa 
+copierea numarului cerut de caractere.
+<BUG>: Daca <@length> este mai mare decat lungimea unui sir, atunci se va trece 
+peste sfarsitul sirului.
+Observatie: registrul <ebx> nu se modifica dupa ce este apelata aceasta 
+functie.
+
+Return: nimic. Sirul 1 se modifica. 
+
+prototip: void copy(char *string1, char *string2, int length);
+
+
+
+//**********-------------------------------------------------------**********//
+; mystery5
+; Description: checks if a character represents a number or not.
+; @char: the address of the character to be checked.
+; Return value: 1 if it is a number, 0 otherwise.
+; Suggested name: isNumber.
+
+	mystery5() - verifica daca un caracter dat ca input reprezinta o cifra.
+@char: adresa caracterului de verificat.
+
+Este necesar ca si caracterul sa fie in format ASCII, pentru ca se verifica 
+daca acesta se incadreaza intre 48 si 57 (codul ASCII pentru cifra).
+
+Return: 1 daca este cifra, 0 in caz contrar. 
+
+prototip: int isNumber(char *c);
+
+
+
+//**********-------------------------------------------------------**********//
+; mystery6
+; Description: inverts the input string.
+; @string: the address of the begining of the input string.
+; Return value: no returned value. The string gets inverted.
+; Suggested name: invert.
+
+	mystery6() - inverseaza continutul unui string.
+@string: adresa de inceput a sirului care se inverseaza.
+
+Se apeleaza <mystery1(string)> pentru a se afla lungimea sirului.
+Se creeaza un buffer pe stiva, unde se copiaza, de la adresa mica la mare, 
+toate elementele sirului (de jos, de la baza buffer-ului, in sus).
+Se apeleaza <mystery4(string, baza_buffer, lungime_string)> pentru a se 
+transpune sirul inversat (asa cum se parcurge de la baza buffer-ului) peste 
+sirul original. Astfel, sirul din input isi inverseaza continutul.
+
+Return: nimic. Sirul se inverseaza. 
+
+prototip: void invert(char *string1);
+
+
+
+//**********-------------------------------------------------------**********//
+; mystery7
+; Description: converts from string to number.
+; @string: the address of the begining of the input string.
+; Return value: to resulted number or an error code (0xFFFFFFFF) if the string 
+;		does not contain only the '0', '1', ..., '9' characters. 
+; Suggested name: stringToNumber.
+
+	mystery7() - converteste un sir de cifre in numarul echivalent.
+@string: adresa de inceput a sirului care se converteste.
+
+Se retine intr-o variabila (o numim "total") numarul convertit. Initial este 0.
+Se apeleaza <mystery1(string)> pentru a se afla lungimea sirului.
+Se salveaza 5 registre pe stiva si se apeleaza <mystery6(string)> pentru a se 
+inversa sirul, fiind mai usor de calculat dupa. Se scot din stiva registrii  
+salvati, se ia fiecare caracter in parte si se apeleaza <mystery5(caracter_crt)> 
+pentru a se verifica daca reprezinta o cifra. Daca nu, se returneaza codul de 
+eroare. Daca este cifra (presupunand ca este in cod ASCII caracterul), se scade 
+48 (codul lui '0' in ASCII) pentru a se obtine valoarea cifrei reprezentate, 
+se inmulteste <total> cu 10 (pentru ca cifrele se iau in ordinea MSB) si se 
+adauga la <total> cifra recent obtinuta. Se repeta procedura si, la final, 
+<total> va reprezenta conversia din <string> in <integer> a sirului de input.
+
+Return: <total>, adica conversia sirului in <integer>, sau codul de eroare 
+	FFFFFFFF, daca sirul nu contine numai caractere ce reprezinta o cifra. 
+
+prototip: int stringToNumber(char *string1);
+
+
+
+//**********-------------------------------------------------------**********//
+; mystery8
+; Description: checks if a string contains another.
+; @string1: the address of the begining of the first string.
+; @string2: the address of the begining of the second string.
+; @length: the length of the second string.
+; Return value: 1 if the first string contains the other, 0 otherwise.
+; Suggested name: hasSubstring
+
+	mystery8() - verifica daca un sir il contine pe celalalt.
+@string1: adresa de inceput a primului sir.
+@string2: adresa de inceput a celui de-al doilea sir.
+@length: lungimea celui de-al doilea sir.
+
+Functia verifica daca <string1> contine <string2>.
+Exista 2 variabile (le numim <poz1> si <poz2>), care reprezinta pozitia curenta 
+in <string1>, respectiv <string2>. Ele sunt initial nule.
+Aici incepe bucla.
+Se verifica daca <poz2> e mai mare decat <length>, caz in care se returneaza 0.
+Se verifica daca in <string1> s-a ajuns la un <ENDLINE> (0xA in ASCII), sau la 
+sfarsitul de sir (0x00), caz in care se returneaza 0.
+Apoi se compara cele 2 caractere din pozitiile curente in ambele siruri. 
+Daca nu sunt identice, se revine la prima pozitie in <string2>, se incrementeaza 
+pozitia in <string1> si se reia bucla. Daca sunt identice, se incrementeaza 
+<poz2> si se verifica daca s-a ajuns la sfarsitul lui <string2>. Daca da, se 
+returneaza 1 (<string2> este subsir al lui <string1>). Daca nu, se incrementeaza 
+<poz1> si se reia bucla.
+Bucla se termina daca s-a ajuns la finalul lui <string2> (succes), <string1>, 
+sau daca <poz2> > <length>.
+<BUG>: Daca in stringul in care se cauta, se afla substringul cautat, imediat 
+precedat de o bucata din substring (bucata = doar un prefix), atunci substringul 
+intreg nu se va putea lua in calcul, pentru ca, la descoperirea primul byte 
+diferit dintre cele 2 stringuri, cautarea se reia de la byte-ul urmator.
+EXEMPLU: mystery8() va decide ca "ulei" nu se regaseste in "uulei", dar se 
+regaseste in "uuulei".
+
+
+Return: 1 daca <string2> e subsirul lui <string1>, 0 altfel.
+
+prototip: int hasSubstring(char *string1, char *string2, int length_string2);
+
+
+
+//**********-------------------------------------------------------**********//
+; mystery9
+; Description: prints all the lines of a string that contain a given substring.
+; @string1: the address of the begining of the first string.
+; @start_pos: the position in <string1> from which the search starts.
+; @length: the maximum length <string1> can be covered.
+; @string2: the address of the begining of the substring to be searched.
+; Return value: no return value. The lines of the string get printed.
+; Suggested name: printLines
+
+	mystery9() - parcurge un sir format din mai multe linii incepand de la 
+o pozitie data si printeaza liniile care contin substringul din input.
+; @string1: adresa stringului format din una sau mai multe linii.
+; @start_pos: pozitie in <string1> de la care incepe cautarea.
+; @length: lungimea maxima care poate fi parcursa in <string1>. Aceasta poate 
+; fi lungimea lui <string1>.
+; @string2: adresa substringului care se va cauta in fiecare linie.
+
+Functia are 3 variabile (le numim <poz_crt>, <poz_inc> si <str2.len>), care 
+reprezinta pozitia curenta in linia curenta, pozitia de inceput a unei linii 
+din <string1>, respectiv lungimea substringului care se cauta.
+Initial, se apeleaza <mystery1(<string2>)> pentru a salva in <str2.len> 
+lungimea substringului de cautat.
+Aici incepe bucla.
+Se verifica daca <poz_crt> este mai mare decat <length>. Daca da, functia se 
+opreste. Daca nu, se verifica daca <poz_crt> reprezinta finalul liniei curente.
+Daca nu, se incrementeaza <poz_crt> si se repeta bucla, pana cand se ajunge la 
+finalul liniei curente. 
+Cand s-a ajuns la finalul liniei curente, se apeleaza 
+<mystery8(adresa_linie_crt, <string2>, <str2.len>)>, pentru a se verifica daca 
+linia curenta contine substringul cautat. Daca nu il contine, <poz_inc> si 
+<poz_crt> devin pozitia de inceput a urmatoarei linii din <string1> si se reia 
+bucla. Daca il contine, se printeaza linia curenta si se trece la linia urm..
+Observatie: prima linie din <string1>, daca respecta conditiile, se afiseaza 
+incepand cu pozitia <start_pos>, iar urmatoarele linii se afiseaza integral.
+Se iese din bucla numai dupa parcurgerea de <length> caractere (posibil 
+lungimea lui <string1>).
+<BUG>: Daca <length> este mai mare decat lungimea lui <string1>, atunci se va 
+itera peste sfarsitul stringului.
+
+
+Return: nimic. Se printeaza liniile din sir care contin un substring dat.
+
+prototip: void printLines(char *string1, int start_pos, int length, char *string2);
+
+
+|----------------------------- CELELALTE FUNCTII -----------------------------|
+
+
+	Voi explica pe scurt ce fac celelalte functii.
+
+    - syscall_wrapper: apeleaza intreruperea de sistem <int 0x80> cu argumentele 
+primite ca input.
+
+    - do_exit: apeleaza <syscall_wrapper> cu argumentele pentru <exit>.
+Intrerupe executia programului.
+
+    - do_write: apeleaza <syscall_wrapper> cu argumentele pentru <write>.
+Scrie in outputul specificat sirul dat ca argument.
+
+    - do_read: apeleaza <syscall_wrapper> cu argumentele pentru <read>.
+Citeste din inputul specificat in sirul dat ca argument.
+
+    - do_open: apeleaza <syscall_wrapper> cu argumentele pentru <open>.
+Deschide fisierul cu numele dat ca argument, pentru citire.
+
+    - do_close: apeleaza <syscall_wrapper> cu argumentele pentru <close>.
+Inchide fisierul cu numele dat ca argument.
+
+    - read_from_file: deschide fisierul dat ca input apeland <do_open>, citeste 
+din fisier, cu <do_read>, la adresa data ca input, un numar maxim de caractere 
+dat in input si apoi inchide fisierul cu <do_close>.
+
+    - print_string: printeaza cu <do_write> sirul dat ca input, in <stdout>, 
+a printa si "newline".
+
+    - print_line: printeaza cu <do_write> sirul dat ca input, in <stdout>, 
+trecand la randul urmator din output.
+
+    - parse_opt: verifica daca sirul dat ca input este un parametru valid.
+Acest lucru se face verificand daca are lungimea 2 si daca se potriveste cu 
+vreunul din parametrii care se pot da in linia de comanda ("-f", "-s", "-e" sau 
+"-i"). Se returneaza un anumit cod (1, 2, 4, 8 sau cod de eroare) in functie de 
+ce parametru a fost gasit.
+
+    - parse_args: parcurge sirul de parametri dati in linia de comanda <argv> 
+si, in functie de ce parametru citeste, salveaza intr-o variabila valoarea 
+corespunzatoare. Daca un parametru nu incepe cu "-", nu se ia in considerare.
+Fiecare parametru este urmat de o valoare:
+	- "-i": urmat de numele fisierului de input din care se citeste un sir.
+	- "-s": urmat de pozitia de unde se incepe parcurgerea sirului citit.
+	- "-e": urmat de pozitia maxima pana la care se parcurge sirul citit.
+	- "-f": subsirul care trebuie sa apara in liniile printate ale primului 
+    sir citit.
+	Daca un parametru apare de 2 ori, se termina executia programului.
+
+    - do_simple_echo: citeste un sir din <stdin> cu <do_read>, de lungima maxima 
+32 de caractere si il afiseaza in <stdout> cu <do_write>.
+
+    - do_run: verifica ce parametri au fost dati in linia de comanda si 
+stabileste daca citirea se face din <stdin> sau din fisierul dat ca argument.
+Pentru fiecare parametru care nu s-a dat, se stabileste valoarea implicita.
+Daca nu s-a dat:
+	- "-i": citirea sirului se face din <stdin>.
+	- "-s": se incepe parcurgerea sirului de la pozitia 0. 
+	- "-e": se poate afisa sirul pana la ultima pozitie.
+	- "-f": se termina executia programului.
+
+    - start: verifica daca au fost dati parametri in linia de comanda. Daca NU, 
+atunci se apeleaza <do_simple_echo>. Altfel, se apeleaza <parse_args> si 
+<do_run> si se iese din program.
+
+
+|----------------------------- PROGRAMUL PER TOTAL ---------------------------|
+
+NUME:
+	tema3 - afiseaza un string dat in input in mai multe moduri.
+
+SYNOPSYS:
+	./tema3 [OPTION]...
+	[INPUT_STRING]
+
+DESCRIERE:
+	Programul afiseaza stringul de input in functie de parametri.
+	Daca nu se da niciun parametru in linia de comanda, programul cere la 
+rulare un string de input, pe care il printeaza identic.
+	Daca exista parametri in linia de comanda, acesta afiseaza numai liniile 
+stringului de input care contin un anumit substring (dat ca parametru), pornind 
+de la o pozitie data din sirul citit. Nu afiseaza nimic daca nu se specifica 
+subsirul cautat.
+
+	Parametri sunt:
+
+	-i NUME_FISIER_INPUT
+		Seteaza fisierul de input pe cel cu numele NUME_FISIER_INPUT. 
+	    Daca acest parametru lipseste, se considera ca input <stdin>.
+
+	-s POZITIE_INCEPUT
+		Seteaza pozitia de unde se incepe parcurgerea sirului citit din 
+	    input, cu valoarea POZITIE_INCEPUT. Daca acest parametru lipseste, 
+	    pozitia de inceput este implicit 0.
+
+	-e NR_MAX_CARACT
+		Seteaza pozitia maxima pana la care se poate parcurge sirul 
+	    citit cu NR_MAX_CARACT. Daca o sfarsitul unei linii este dupa 
+	    NR_MAX_CARACT, aceasta nu se mai afiseaza. In lipsa acestui 
+	    parametru, pozitia de final este implicit capatul sirului citit.
+
+	-f SUBSTRING
+		Seteaza substringul care trebuie gasit in fiecare linie, pentru 
+	    ca aceasta sa se poata afisa. Daca acest argument lipseste, dar 
+	    numarul de argumente nu este nul, programul nu afiseaza nimic.
+
+IESIRE:
+	Iesire este identica cu intrarea daca nu exista parametri in linia de 
+comanda. Daca exista parametri, iesirea consta in liniile din sirul de input 
+care contin subsirul dat ca parametru, linii cuprinse intre pozitia de inceput 
+si cea de sfarsit date ca parametri.
+
+
+|---------------------------- OPTIMIZAREA PE VITEZA --------------------------|
+
+	Codul a fost rescris de la 0.
+	Pentru a se evita toate instructiunile <call>, <leave>, <ret>, <push>, 
+<pop> si accesarile in memorie de genul <dword[ebp + 8]> (parametri unei functii) 
+care sunt foarte costisitoare dpdv al timpului, programul nu contine nicio functie.
+Secventele de cod necesare (de ex, calcularea lungimii, printatul, cautarea 
+substringului) sunt scrie chiar acolo unde este nevoie, pentru a se folosi cat 
+mai putine <jump>-uri. Nu este eficient dpdv al spatiului, dar este eficient 
+dpdv al timpului.
+	S-au folosit cat mai putine accesari de memorie si s-a incercat folosirea 
+exclusiv a registrelor si s-a evitat complet folosirea stivei pentru salvarea 
+de valori. <Syscall>-urile s-au facut mereu unde a fost nevoie, nu exista 
+<syscall_wrapper> (ar dubla timpul unui apel de sistem).
+
+	Programul incepe la <_start>, unde verifica numarul de argumente. Daca 
+este 1, se sare la <do_simple_echo>, unde se fac apeluri de sistem de citire si 
+scriere; altfel, se trece la evaluarea parametrilor.
+
+	Pentru parametrii "-i" si "-f", se atribuie unui registru adresa unui string).
+Motivul pentru care s-au folosit 2 secvente de cod care fac acelasi lucru este 
+ca string-urile sunt memorate in registri diferiti (<edi>, respectiv <esi>) si 
+ar fi durat mai mult per total sa se foloseasca acelasi cod pentru a salva in 2
+registri diferiti.
+	Pentru parametrii "-s" si "-e" se  transforma string-ul dat ca argument 
+intr-un numar. Asemenea cazului anterior, sunt folosite 2 secvente de cod aproape 
+identice pentru ca dureaza mai putin pentru a se salva cele 2 valori rezultate 
+in variabile diferite <poz_beg>, respectiv <pos_end>.
+	Asadar, nerefolosirea unui cod de 2 ori ajuta la evitarea folosirii 
+unor <jump>-uri, <cmp>-uri sau instructiuni suplimentare si, deci, dureaza 
+mai putin timp, chiar daca ocupa mai mult spatiu.
+
+	Daca nu s-a folosit parametrul "-i", se citeste de la <stdin>; altfel 
+se citeste din fisierului al carui nume a fost dat ca parametru si se 
+salveaza adresa sirului citit in variabila <msg>.
+
+	CUM S-A IMBUNATATIT CAUTAREA IN STRING A SUBSTRINGULUI:
+	
+	Pentru a avea cat mai putine instructiuni (<mov>, <cmp>) in bucla care 
+parcurge tot textul, se seteaza de la inceput sfarsitul sirului (fie ca este cel 
+dat in linia de comanda, fie ca nu este dat -> deci este chiar sfarsitul textului)
+cu valoarea 10. Imediat dupa ultima pozitie, este plasat un byte identic cu 
+primul byte al substringului, iar apoi este introdus un byte de valoarea 9.
+Inainte de inceputul sirului, mai este introdus un byte de valoare 10.
+
+Explicatia pentru aceste noi valori este urmatoarea:
+
+	Pentru a folosi cat mai putine <cmp>-uri, pentru ca ocupa mult timp, 
+cu ajutorul <repne scasb> se cauta in tot sirul prima aparitie a primului byte 
+al subsirului. Daca se gaseste, se verifica byte cu byte, iterand simultan si 
+sirul si subsirul, daca sunt egale. Cand se ajunge la sfarsitul subsirului, 
+inseamna ca s-a facut match. Daca nu se face match, se cauta urmatoarea aparitie 
+a primului byte al subsirului. Daca s-a facut match, atunci tot cu <repne scasb> 
+se parcurge linia curenta in stanga si in dreapta, pentru a i se afla capetele, 
+pentru a se putea printa. Capetele au mereu valoarea 10, deci nu trebuia sa le 
+mai comparam si cu valoarea 0 (sfarsit de sir).
+	Cand se gaseste in sirul un al byte identic cu primul din subsir, se 
+verifica mereu daca dupa el exista valoarea 9 (setata aleator), care reprezinta 
+sfarsitul sirului. Daca exista, se termina programul.
+
+*******************************PE SCURT:***************************************
+
+	Inceputul si sfarsitul sirului sunt marcate cu 10 (in loc de 0). In tot 
+sirul se cauta fiecare aparitie a primului byte din substring. Cand se gaseste 
+o aparitie, se verifica daca acolo se face match cu substringul.
+	Daca nu se face, se cauta byte-ul urmator. Daca este match, se afla 
+capetele de la stanga si de la dreapta ale liniei curente (capete marcate cu 10) 
+si apoi se face printarea. Pe urma se cauta urmatorul byte.
+	Cand dupa unul din bytii gasiti se afla byte-ul cu valoarea "9" (setata 
+in prealabil), se opreste programul.
+
+	Astfel, se fac cat mai putin comparatii si verificari si programul este 
+eficient.
+
+
+
+|---------------------------- OPTIMIZAREA PE MARIME --------------------------|
+
+
+	
+	Ca functionalitate, este identic cu cel optimizat pe viteza. Diferentele
+ constau in faptul ca s-a folosit o singura functie de transformare din sir in 
+numar, toate label-urile si variabilele au fost redenumite print-o singura 
+litera si s-au folosit, uneori, <push> si <pop> in loc de <mov>.
+
+	Asadar, pe langa metodele folosite la optimizarea pe viteza (evitarea 
+functiilor si a cadrelor de stiva si accesarilor din memorie specifice acestora),
+ s-a folosit totusi o functie pentru evitarea codului duplicat si s-au inlocuit 
+unele instructiuni cu altele mai mici ca marime. (ex: "xor eax, eax", in loc de
+"mov eax, 0").
